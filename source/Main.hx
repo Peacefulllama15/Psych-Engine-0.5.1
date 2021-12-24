@@ -8,6 +8,9 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import sys.FileSystem;
+import lime.app.Application;
+import lime.system.System;
 
 class Main extends Sprite
 {
@@ -26,6 +29,33 @@ class Main extends Sprite
 	{
 		Lib.current.addChild(new Main());
 	}
+
+	private static var dataPath:String = null;
+
+    static public function getDataPath():String 
+    {
+        if (dataPath != null && dataPath.length > 0) 
+        {
+            return dataPath;
+        } 
+        else 
+        {
+            #if mobile
+            if (FileSystem.exists("/storage/emulated/0/Android/data/" + Application.current.meta.get("packageName") + "/files/")) 
+            {
+                dataPath = "/storage/emulated/0/Android/data/" + Application.current.meta.get("packageName") + "/files/";
+            } 
+            else 
+            {
+                Application.current.window.alert("couldn't find directory: " + "/storage/emulated/0/Android/data/" + Application.current.meta.get("packageName") + "/files/" + "\n" + "try creating it and copying assets/assets, assets/mods from apk to it","an ERROR occured");
+                dataPath = System.applicationStorageDirectory;
+            }
+            #else
+                dataPath = "";
+            #end
+        }
+        return dataPath;
+    }
 
 	public function new()
 	{
@@ -72,13 +102,11 @@ class Main extends Sprite
 		ClientPrefs.loadDefaultKeys();
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 
-		#if !mobile
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
 		if(fpsVar != null) {
 			fpsVar.visible = ClientPrefs.showFPS;
 		}
-		#end
 
 		#if html5
 		FlxG.autoPause = false;
