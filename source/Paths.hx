@@ -81,13 +81,13 @@ class Paths
 			var levelPath:String = '';
 			if(currentLevel != 'shared') {
 				levelPath = getLibraryPathForce(file, currentLevel);
-				if (OpenFlAssets.exists(levelPath, type))
-					return levelPath;
+				if (FileSystem.exists(Main.getDataPath() + levelPath, type))
+					return Main.getDataPath() + levelPath;
 			}
 
 			levelPath = getLibraryPathForce(file, "shared");
-			if (OpenFlAssets.exists(levelPath, type))
-				return levelPath;
+			if (FileSystem.exists(Main.getDataPath() + levelPath, type))
+				return Main.getDataPath() + levelPath;
 		}
 
 		return getPreloadPath(file);
@@ -105,7 +105,7 @@ class Paths
 
 	inline public static function getPreloadPath(file:String = '')
 	{
-		return 'assets/$file';
+		return Main.getDataPath() + 'assets/$file';
 	}
 
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
@@ -141,7 +141,7 @@ class Paths
 			return file;
 		}
 		#end
-		return 'assets/videos/$key.$VIDEO_EXT';
+		return Main.getDataPath() + 'assets/videos/$key.$VIDEO_EXT';
 	}
 
 	static public function sound(key:String, ?library:String):Dynamic
@@ -239,8 +239,8 @@ class Paths
 			return File.getContent(mods(key));
 		#end
 
-		if (FileSystem.exists(Main.getDataPath() + getPreloadPath(key)))
-			return File.getContent(Main.getDataPath() + getPreloadPath(key));
+		if (FileSystem.exists(getPreloadPath(key)))
+			return File.getContent(getPreloadPath(key));
 
 		if (currentLevel != null)
 		{
@@ -256,7 +256,7 @@ class Paths
 				return File.getContent(Main.getDataPath() + levelPath);
 		}
 		#end
-		return Assets.getText(getPath(key, TEXT));
+		return File.getContent(getPath(key, TEXT));
 	}
 
 	inline static public function font(key:String)
