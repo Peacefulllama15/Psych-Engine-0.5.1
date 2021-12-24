@@ -105,7 +105,7 @@ class Paths
 
 	inline public static function getPreloadPath(file:String = '')
 	{
-		return Main.getDataPath() + 'assets/$file';
+		return 'assets/$file';
 	}
 
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
@@ -239,8 +239,8 @@ class Paths
 			return File.getContent(mods(key));
 		#end
 
-		if (FileSystem.exists(getPreloadPath(key)))
-			return File.getContent(getPreloadPath(key));
+		if (FileSystem.exists(Main.getDataPath() + getPreloadPath(key)))
+			return File.getContent(Main.getDataPath() + getPreloadPath(key));
 
 		if (currentLevel != null)
 		{
